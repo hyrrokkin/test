@@ -47,7 +47,7 @@ QtRunnerApp::QtRunnerApp(QWidget *parent)
 
     hide_property_employee_pane();
 
-    employDataManager = new EmployeesDataManager("D://1/employees.sqlite3");
+    employDataManager = new EmployeesDataManager("employees.sqlite3");
 
     show_employees_tree(employDataManager->load());
 }
