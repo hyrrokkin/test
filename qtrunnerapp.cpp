@@ -3,6 +3,8 @@
 
 //Q_DECLARE_METATYPE(TreeElementContainer<Employee>);
 
+#define FIXED_LINE_WIDTH            300
+
 typedef TreeElementContainer<Employee> *employeeContainer;
 Q_DECLARE_METATYPE(employeeContainer)
 
@@ -30,9 +32,18 @@ QtRunnerApp::QtRunnerApp(QWidget *parent)
     setFontLabel(ui->nameLabel);
     setFontLabel(ui->patronymicLabel);
     setFontLabel(ui->positionLabel);
+    setFontLabel(ui->ageLabel);
+
+    ui->ageLineEdit->setValidator(new QIntValidator(0, 100, this));
 
     ui->treeWidget->setHeaderHidden(true);
     ui->gridLayout_2->setAlignment(Qt::AlignTop);
+
+    ui->surnameLineEditor       ->setFixedWidth(FIXED_LINE_WIDTH);
+    ui->nameLaneEditor          ->setFixedWidth(FIXED_LINE_WIDTH);
+    ui->patronymicLineEdit      ->setFixedWidth(FIXED_LINE_WIDTH);
+    ui->positionLineEditor_2    ->setFixedWidth(FIXED_LINE_WIDTH);
+    ui->ageLineEdit             ->setFixedWidth(FIXED_LINE_WIDTH);
 
     hide_property_employee_pane();
 
@@ -74,16 +85,19 @@ void QtRunnerApp::hide_property_employee_pane() {
     ui->nameLabel->setVisible(false);
     ui->patronymicLabel->setVisible(false);
     ui->positionLabel->setVisible(false);
+    ui->ageLabel->setVisible(false);
 
     ui->surnameLineEditor->setText("");
     ui->nameLaneEditor->setText("");
     ui->patronymicLineEdit->setText("");
     ui->positionLineEditor_2->setText("");
+    ui->ageLineEdit->setText("");
 
     ui->surnameLineEditor->setVisible(false);
     ui->nameLaneEditor->setVisible(false);
     ui->patronymicLineEdit->setVisible(false);
     ui->positionLineEditor_2->setVisible(false);
+    ui->ageLineEdit->setVisible(false);
 
     ui->create_employee_button->setVisible(false);
     ui->close_employee_button->setVisible(false);
@@ -96,6 +110,7 @@ void QtRunnerApp::show_new_employee_pane(TreeElementContainer<Employee> *employe
     ui->nameLabel->setVisible(true);
     ui->patronymicLabel->setVisible(true);
     ui->positionLabel->setVisible(true);
+    ui->ageLabel->setVisible(true);
 
     if (employeeNode == NULL) {
         currentEmployeeNode = NULL;
@@ -111,11 +126,13 @@ void QtRunnerApp::show_new_employee_pane(TreeElementContainer<Employee> *employe
     ui->nameLaneEditor->setText("");
     ui->patronymicLineEdit->setText("");
     ui->positionLineEditor_2->setText("");
+    ui->ageLineEdit->setText("");
 
     ui->surnameLineEditor->setVisible(true);
     ui->nameLaneEditor->setVisible(true);
     ui->patronymicLineEdit->setVisible(true);
     ui->positionLineEditor_2->setVisible(true);
+    ui->ageLineEdit->setVisible(true);
 
     ui->create_employee_button->setVisible(true);
     ui->close_employee_button->setVisible(true);
@@ -128,16 +145,20 @@ void QtRunnerApp::show_employee_pane(TreeElementContainer<Employee> *employeeNod
     ui->nameLabel->setVisible(true);
     ui->patronymicLabel->setVisible(true);
     ui->positionLabel->setVisible(true);
+    ui->ageLabel->setVisible(true);
+
 
     ui->surnameLineEditor->setText(employeeNode->getValue()->getSurname().c_str());
     ui->nameLaneEditor->setText(employeeNode->getValue()->getName().c_str());
     ui->patronymicLineEdit->setText(employeeNode->getValue()->getPatronymic().c_str());
     ui->positionLineEditor_2->setText(employeeNode->getValue()->getPosition().c_str());
+    ui->ageLineEdit->setText(std::to_string(employeeNode->getValue()->getAge()).c_str());
 
     ui->surnameLineEditor->setVisible(true);
     ui->nameLaneEditor->setVisible(true);
     ui->patronymicLineEdit->setVisible(true);
     ui->positionLineEditor_2->setVisible(true);
+    ui->ageLineEdit->setVisible(true);
 
     ui->create_employee_button->setVisible(true);
     ui->close_employee_button->setVisible(true);
@@ -166,7 +187,7 @@ void QtRunnerApp::on_create_employee_button_clicked() {
                 .setSurname(ui->surnameLineEditor->text().toStdString())
                 .setPatronymic(ui->patronymicLineEdit->text().toStdString())
                 .setPosition(ui->positionLineEditor_2->text().toStdString())
-                .setAge(50)
+                .setAge(ui->ageLineEdit->text().toInt())
                 .build();
 
         TreeElementContainer<Employee> *employeeNode;
@@ -197,6 +218,7 @@ void QtRunnerApp::on_create_employee_button_clicked() {
         currentEmployeeNode->getValue()->setName(ui->nameLaneEditor->text().toStdString());
         currentEmployeeNode->getValue()->setPatronymic(ui->patronymicLineEdit->text().toStdString());
         currentEmployeeNode->getValue()->setPosition(ui->positionLineEditor_2->text().toStdString());
+        currentEmployeeNode->getValue()->setAge(ui->ageLineEdit->text().toInt());
 
         std::string text = currentEmployeeNode->getValue()->getSurname() + " " + currentEmployeeNode->getValue()->getName() + " " + currentEmployeeNode->getValue()->getPatronymic() + ": " + currentEmployeeNode->getValue()->getPosition();
 
@@ -233,8 +255,6 @@ void QtRunnerApp::on_remove_button_clicked()
 void QtRunnerApp::on_close_employee_button_clicked() {
     hide_property_employee_pane();
 }
-
-
 
 void QtRunnerApp::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column) {
     QVariant var = ui->treeWidget->selectedItems()[0]->data(0, Qt::UserRole);

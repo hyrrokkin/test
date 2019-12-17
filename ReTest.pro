@@ -1,7 +1,6 @@
 QT       += core gui
 QT       += sql
 QT       += widgets
-QT       += gmock
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,7 +19,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     core/data_manager/employees_data_manager.cpp \
-    core/data_manager/sqlite3.c \
     core/employee/employee.cpp \
     core/tree/tree.cpp \
     main.cpp \
@@ -28,7 +26,6 @@ SOURCES += \
 
 HEADERS += \
     core/data_manager/employees_data_manager.h \
-    core/data_manager/sqlite3.h \
     core/employee/employee.h \
     core/tree/tree.h \
     qtrunnerapp.h

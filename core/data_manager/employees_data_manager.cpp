@@ -17,10 +17,10 @@ const char* SQL_QUERY_TABLE_SUPERVISOR_EXIST = "CREATE TABLE IF NOT EXISTS SUPER
                                                "ON DELETE CASCADE"
                                                ");";
 
-const char* EMPLOYEES_INSERT_TEMPLATE = "INSERT INTO EMPLOYEE (id, name, surname, patronymic, position, age) VALUES (:id, :name, :surname, :patronymic, :position, :age);";
-const char* SUPERVISION_INSERT_TEMPLATE = "INSERT INTO SUPERVISOR (supervisor_id, subordinate_id) VALUES (:supervisor_id, :subordinate_id);";
+const char* EMPLOYEES_INSERT_TEMPLATE       = "INSERT INTO EMPLOYEE (id, name, surname, patronymic, position, age) VALUES (:id, :name, :surname, :patronymic, :position, :age);";
+const char* SUPERVISION_INSERT_TEMPLATE     = "INSERT INTO SUPERVISOR (supervisor_id, subordinate_id) VALUES (:supervisor_id, :subordinate_id);";
 
-const char* LOAD_EMPLOYEES_TEMPLATE     = "SELECT * FROM EMPLOYEE ORDER BY ID";
+const char* LOAD_EMPLOYEES_TEMPLATE         = "SELECT * FROM EMPLOYEE ORDER BY ID";
 
 const char* ROOTS_EMPLOYEES_TEMPLATE        = "SELECT * FROM EMPLOYEE WHERE id NOT IN (SELECT subordinate_id FROM SUPERVISOR)";
 const char* LOAD_SUPERVISION_TEMPLATE       = "SELECT * from EMPLOYEE WHERE id IN (SELECT subordinate_id FROM SUPERVISOR WHERE supervisor_id == :id)";
@@ -28,6 +28,9 @@ const char* LOAD_SUPERVISION_TEMPLATE       = "SELECT * from EMPLOYEE WHERE id I
 const char* UPDATE_EMPLOYEE_TEMPLATE        = "UPDATE EMPLOYEE SET name = :name, surname = :surname, patronymic = :patronymic, position = :position, age = :age WHERE id = :id";
 
 const char* REMOVE_TEMPLATE                 = "DELETE FROM EMPLOYEE WHERE id == :id";
+const char* REMOVE_SUPERVISION_TEMPLATE_1   = "DELETE FROM SUPERVISOR WHERE supervisor_id == :id";
+const char* REMOVE_SUPERVISION_TEMPLATE_2   = "DELETE FROM SUPERVISOR WHERE subordinate_id == :id";
+
 
 template <typename E, typename K>
 AbstractEmployeesDataManager<E, K>::AbstractEmployeesDataManager(string db_name) {
@@ -109,8 +112,6 @@ void EmployeesDataManager::update(TreeElementContainer<Employee>* entity) {
     query->bindValue(":age"         , entity->getValue()->getAge());
     query->bindValue(":id"          , entity->getValue()->getId());
 
-    std::cout<< entity->getValue()->getName() << std::endl;
-
     query->exec();
 }
 
@@ -118,6 +119,14 @@ void EmployeesDataManager::remove(TreeElementContainer<Employee>* entity) {
     remove_child(entity->getValue()->getId());
 
     query->prepare(REMOVE_TEMPLATE);
+    query->bindValue(":id"          , entity->getValue()->getId());
+    query->exec();
+
+    query->prepare(REMOVE_SUPERVISION_TEMPLATE_1);
+    query->bindValue(":id"          , entity->getValue()->getId());
+    query->exec();
+
+    query->prepare(REMOVE_SUPERVISION_TEMPLATE_2);
     query->bindValue(":id"          , entity->getValue()->getId());
     query->exec();
 }
@@ -142,10 +151,16 @@ void EmployeesDataManager::remove_child(int id) {
         query->bindValue(":id"          , id);
         query->exec();
 
+        query->prepare(REMOVE_SUPERVISION_TEMPLATE_1);
+        query->bindValue(":id"          , id);
+        query->exec();
+
+        query->prepare(REMOVE_SUPERVISION_TEMPLATE_2);
+        query->bindValue(":id"          , id);
+        query->exec();
+
         delete query;
     }
-
-    std::cout<< last_id << std::endl;
 
     delete query;
 }
@@ -184,7 +199,7 @@ std::vector<TreeElementContainer<Employee>*>* EmployeesDataManager::load() {
 
     while (query -> next()) {
         last_id = last_id < query->value(0).toInt() ? query->value(0).toInt() : last_id;
-std::cout << last_id << std::endl;
+
         Employee* employee = Employee::EmployeeBuilder()
                 .setId(query->value(0).toInt())
                 .setName(query->value(1).toString().toStdString())

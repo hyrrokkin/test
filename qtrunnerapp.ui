@@ -76,35 +76,21 @@
         </item>
         <item row="1" column="0">
          <layout class="QGridLayout" name="gridLayout_6">
-          <item row="0" column="0">
-           <layout class="QHBoxLayout" name="nameHBox">
+          <item row="5" column="0">
+           <layout class="QHBoxLayout" name="positionHBox">
             <item>
-             <widget class="QLabel" name="surnameLabel">
+             <widget class="QLabel" name="positionLabel">
               <property name="text">
-               <string>Фамилия</string>
+               <string>Должность</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="surnameLineEditor"/>
+             <widget class="QLineEdit" name="positionLineEditor_2"/>
             </item>
            </layout>
           </item>
-          <item row="1" column="0">
-           <layout class="QHBoxLayout" name="nameHBox_2">
-            <item>
-             <widget class="QLabel" name="nameLabel">
-              <property name="text">
-               <string>Имя</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="nameLaneEditor"/>
-            </item>
-           </layout>
-          </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <layout class="QHBoxLayout" name="patronymicHBox">
             <item>
              <widget class="QLabel" name="patronymicLabel">
@@ -118,17 +104,45 @@
             </item>
            </layout>
           </item>
-          <item row="3" column="0">
-           <layout class="QHBoxLayout" name="positionHBox">
+          <item row="2" column="0">
+           <layout class="QHBoxLayout" name="nameHBox_2">
             <item>
-             <widget class="QLabel" name="positionLabel">
+             <widget class="QLabel" name="nameLabel">
               <property name="text">
-               <string>Должность</string>
+               <string>Имя</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="positionLineEditor_2"/>
+             <widget class="QLineEdit" name="nameLaneEditor"/>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QHBoxLayout" name="nameHBox">
+            <item>
+             <widget class="QLabel" name="surnameLabel">
+              <property name="text">
+               <string>Фамилия</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="surnameLineEditor"/>
+            </item>
+           </layout>
+          </item>
+          <item row="4" column="0">
+           <layout class="QHBoxLayout" name="age_HBox">
+            <item>
+             <widget class="QLabel" name="ageLabel">
+              <property name="text">
+               <string>Возраст</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="ageLineEdit"/>
             </item>
            </layout>
           </item>
